@@ -39,8 +39,12 @@ public class ClickManager : MonoBehaviour
 
         if (PrestigeManager.Instance != null)
         {
+            // Умножаем только на "Мощный Клик" (+30% за уровень)
             dmg *= PrestigeManager.Instance.GetClickMultiplier();
-            dmg *= PrestigeManager.Instance.GetDamageMultiplier();
+
+            // Умножаем на базовый бонус Пепла (+10% за каждую единицу Пепла)
+            double ashBonus = 1.0 + (PrestigeManager.Instance.GetAsh() * 0.10);
+            dmg *= ashBonus;
         }
 
         return dmg;
@@ -71,16 +75,10 @@ public class ClickManager : MonoBehaviour
 
     public void PerformClick(Enemy enemy)
     {
-        if (enemy == null) return;
+        if (enemy == null || enemy.IsDead()) return;
 
         double damage = GetClickDamage();
-        bool isCrit = Random.value < critChance;
-
-        if (isCrit)
-            damage *= critMultiplier;
-
         enemy.TakeDamage(damage);
-        GameEvents.OnDamageDealt?.Invoke(damage, true);
     }
 
     public void ResetProgress()

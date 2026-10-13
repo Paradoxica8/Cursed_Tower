@@ -35,8 +35,6 @@ public class Hero : MonoBehaviour
 
         originalScale = transform.localScale;
         gameObject.SetActive(false);
-
-        spriteRenderer.color = data.heroColor;
     }
 
     public void Hire()
@@ -67,15 +65,28 @@ public class Hero : MonoBehaviour
 
     public double GetDPS()
     {
-        if (!isHired || data == null) return 0;
+        if (!isHired || level <= 0 || data == null) return 0;
 
+        // 1. Базовый урон от уровня
         double dps = data.baseDPS * level;
 
+        // 2. Личная способность 1 (увеличение урона самого героя)
         if (level >= data.ability1Level)
+        {
             dps *= data.ability1Multiplier;
+        }
 
-        if (level >= data.ability4Level)
-            dps *= data.ability4Multiplier;
+        // 3. Талант Алтаря (Сила Предков) + Бонус Пепла
+        if (PrestigeManager.Instance != null)
+        {
+            dps *= PrestigeManager.Instance.GetDamageMultiplier();
+        }
+
+        // 4. Активное заклинание "Ярость Героев"
+        if (SpellManager.Instance != null)
+        {
+            dps *= SpellManager.Instance.HeroDPSMultiplier;
+        }
 
         return dps;
     }
@@ -141,8 +152,8 @@ public class Hero : MonoBehaviour
         double dps = GetEffectiveDPS();
         if (dps <= 0) return;
 
+        // Наносим урон (Enemy.TakeDamage сам покажет плавающие цифры)
         enemy.TakeDamage(dps);
-        GameEvents.OnDamageDealt?.Invoke(dps, false);
 
         isAttacking = true;
         animTimer = attackAnimDuration;

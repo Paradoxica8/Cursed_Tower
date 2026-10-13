@@ -22,4 +22,8 @@ public static class GameEvents
     public static Action<double> OnTotalDPSChanged;
 
     public static System.Action OnBuyModeChanged;
+
+    public static Action<SpellType, float> OnSpellActivated;
+    public static Action<SpellType, float, float> OnSpellCooldownUpdated;
+    public static Action<SpellType> OnSpellReady;
 }

@@ -156,16 +156,15 @@ public class HeroManager : MonoBehaviour
 
     public double GetTotalDPS()
     {
-        double total = 0;
-        double globalMult = GetGlobalMultiplier();
-
+        double totalDPS = 0;
         foreach (var hero in heroes)
         {
-            if (hero.IsHired())
-                total += hero.GetDPS() * globalMult;
+            if (hero != null)
+            {
+                totalDPS += hero.GetDPS(); // Урон каждого героя уже умножен на Алтарь и Скиллы!
+            }
         }
-
-        return total;
+        return totalDPS;
     }
 
     public void ResetAllHeroes()

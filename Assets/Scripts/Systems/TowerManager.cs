@@ -29,6 +29,8 @@ public class TowerManager : MonoBehaviour
     private void OnEnable() => GameEvents.OnEnemyDied += OnEnemyDefeated;
     private void OnDisable() => GameEvents.OnEnemyDied -= OnEnemyDefeated;
 
+    public Enemy CurrentEnemy => currentEnemy;
+
     private void Start()
     {
         SpawnNextEnemy();
@@ -143,6 +145,7 @@ public class TowerManager : MonoBehaviour
 
     public bool IsBossFloor() => currentFloor % 5 == 0;
     public int GetCurrentFloor() => currentFloor;
+    public int CurrentFloor => currentFloor;
 
     public void SetFloor(int floor)
     {
